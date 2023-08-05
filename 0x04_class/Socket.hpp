@@ -1,7 +1,5 @@
-#include <string>
 #include "InetAddress.hpp"
 
-using std::string;
 class Socket
 {
 private:

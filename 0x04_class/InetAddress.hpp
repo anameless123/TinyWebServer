@@ -4,7 +4,6 @@ class InetAddress
 {
 private:
     sockaddr_in siaddr;
-
 public:
     InetAddress();
     InetAddress(const uint16_t &type, const char *IP, const short &port);
