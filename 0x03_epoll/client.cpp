@@ -16,7 +16,7 @@ int main()
     serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     serv_addr.sin_port = htons(8888);
 
-    errif(connect(sockfd, (sockaddr *)&serv_addr, sizeof(serv_addr)) == -1, "Failed to connect !");
+    Utils::errif(connect(sockfd, (sockaddr *)&serv_addr, sizeof(serv_addr)) == -1, "Failed to connect !");
     char buf[1024];
     cout << "connect succeed!" << endl;
 
@@ -27,7 +27,7 @@ int main()
         ssize_t wbytes = write(sockfd, buf, sizeof(buf));
         if (wbytes == -1)
         {
-            errif(wbytes == -1, "Failed to write, socket already disconnected!");
+            Utils::errif(wbytes == -1, "Failed to write, socket already disconnected!");
             break;
         }
         ssize_t read_bytes = read(sockfd, buf, sizeof(buf));
@@ -44,7 +44,7 @@ int main()
         else if (read_bytes == -1)
         {
             close(sockfd);
-            errif(true, "socket read error");
+            Utils::errif(true, "socket read error");
         }
     }
 
