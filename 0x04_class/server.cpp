@@ -1,11 +1,5 @@
-#include <iostream>
-#include <fcntl.h>
-#include <unistd.h>
-#include <vector>
-#include <cstring>
 #include "Socket.hpp"
 #include "Epoll.hpp"
-#include "../utils.hpp"
 
 int main()
 {
@@ -20,18 +14,18 @@ int main()
     InetAddress clnt_addr;
     while (true)
     {
-        std::vector<epoll_event> events = myepoll->poll();
+        std::vector<epoll_event> events = std::move(myepoll->poll());
         for (auto e : events)
         {
             if (e.data.fd == serv_sock->getfd())
             {
                 int clnt_sockfd = serv_sock->accept(clnt_addr);
-                setnonblocking(clnt_sockfd);
+                Utils::setnonblocking(clnt_sockfd);
                 myepoll->addFd(clnt_sockfd, EPOLLIN | EPOLLOUT);
             }
             else if (e.events & EPOLLIN)
             {
-                handleEvent(e.data.fd);
+                Utils::handleEvent(e.data.fd);
             }
         }
     }

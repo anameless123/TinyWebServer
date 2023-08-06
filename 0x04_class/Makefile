@@ -1,5 +1,5 @@
 server:
-	g++ client.cpp Socket.cpp -o client && \
-	g++ server.cpp Epoll.cpp InetAddress.cpp Socket.cpp -o server
+	g++ server.cpp -o server &&\
+	g++ client.cpp -o client
 clean:
 	rm server && rm client
