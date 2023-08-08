@@ -1,7 +1,7 @@
 #pragma once
 #include <sys/epoll.h>
 #include <vector>
-#include "../utils.hpp"
+#include "utils.hpp"
 
 #ifndef MAX_EVENTS
 #define MAX_EVENTS 64

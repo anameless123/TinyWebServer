@@ -1,6 +1,6 @@
-#include "Epoll.h"
 #include "utils.hpp"
 #include "Channel.h"
+#include "Epoll.h"
 
 Epoll::Epoll()
 {
@@ -23,35 +23,31 @@ Epoll::~Epoll()
         close(epfd);
     delete[] evs;
 }
-void Epoll::addFd(int fd, uint32_t flag)
-{
-    epoll_event ev;
-    ev.data.fd = fd;
-    ev.events = flag;
-    if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) == -1)
-    {
-        perror("Failed to add to epoll! ");
-        exit(EXIT_FAILURE);
-    }
-    else
-        cout << "add epoll:" << fd << endl;
-}
 
-int Epoll::getFd()
-{
-    return epfd;
-}
+// void Epoll::addFd(int fd, uint32_t flag)
+// {
+//     epoll_event ev;
+//     ev.data.fd = fd;
+//     ev.events = flag;
+//     if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) == -1)
+//     {
+//         perror("Failed to add to epoll! ");
+//         exit(EXIT_FAILURE);
+//     }
+//     else
+//         cout << "add epoll:" << fd << endl;
+// }
 
-std::vector<epoll_event> Epoll::poll()
-{
-    int nfds = epoll_wait(epfd, evs, MAX_EVENTS, -1);
-    Utils::errif(nfds == -1, "Failed to poll!");
-    // return std::vector<epoll_event> (evs, evs+sizeof(evs)/sizeof(epoll_event));
-    std::vector<epoll_event> eventv;
-    for (int i = 0; i < nfds; ++i)
-        eventv.emplace_back(std::move(evs[i]));
-    return eventv;
-}
+// std::vector<epoll_event> Epoll::poll()
+// {
+//     int nfds = epoll_wait(epfd, evs, MAX_EVENTS, -1);
+//     Utils::errif(nfds == -1, "Failed to poll!");
+//     // return std::vector<epoll_event> (evs, evs+sizeof(evs)/sizeof(epoll_event));
+//     std::vector<epoll_event> eventv;
+//     for (int i = 0; i < nfds; ++i)
+//         eventv.emplace_back(std::move(evs[i]));
+//     return eventv;
+// }
 
 std::vector<Channel *> Epoll::pollChannel()
 {

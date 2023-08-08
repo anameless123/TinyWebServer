@@ -1,28 +1,6 @@
-#pragma once
-#include <sys/socket.h>
 #include "InetAddress.hpp"
-#include "utils.hpp"
+#include "Socket.h"
 
-class Socket
-{
-private:
-    int sockfd = 0;
-
-public:
-    // IP ver, default = IPv4;
-    int IP = AF_INET;
-    // Max Connection, default = 128;
-    int MaxCon = 128;
-
-    Socket();
-    Socket(__socket_type tran, uint16_t inet);
-    ~Socket();
-    void bind(InetAddress addr);
-    void listen();
-    void connect(InetAddress addr);
-    int accept(InetAddress &addr);
-    int getFd();
-};
 Socket::Socket()
 {
     sockfd = ::socket(AF_INET, SOCK_STREAM, 0);
@@ -34,6 +12,11 @@ Socket::Socket()
     else
         cout << "socket initialize succeed!" << endl;
 }
+Socket::Socket(int fd) : sockfd(fd)
+{
+    Utils::errif(fd == -1, "Failed to copy construct Socket by fd");
+}
+
 Socket::Socket(__socket_type tran, uint16_t inet)
 {
     if (sockfd = ::socket(IP, tran, 0) == -1)
@@ -46,7 +29,11 @@ Socket::Socket(__socket_type tran, uint16_t inet)
 }
 Socket::~Socket()
 {
-    close(sockfd);
+    if (sockfd != -1)
+    {
+        close(sockfd);
+        sockfd = -1;
+    }
 }
 void Socket::bind(InetAddress addr)
 {
@@ -59,7 +46,7 @@ void Socket::bind(InetAddress addr)
         }
         else
             cout << "Server bind at: " << inet_ntoa(addr.siaddr.sin_addr)
-             << ":" << ntohs(addr.siaddr.sin_port) << endl;
+                 << ":" << ntohs(addr.siaddr.sin_port) << endl;
     }
     else
     {
@@ -79,7 +66,7 @@ void Socket::connect(InetAddress addr)
         }
         else
             cout << "Connect to: " << inet_ntoa(addr.siaddr.sin_addr)
-             << ":" << ntohs(addr.siaddr.sin_port) << endl;
+                 << ":" << ntohs(addr.siaddr.sin_port) << endl;
     }
     else
     {
@@ -99,21 +86,27 @@ void Socket::listen()
         cout << "listening..." << endl;
 }
 
-int Socket::accept(InetAddress &clntaddr)
+int Socket::accept(InetAddress *clntaddr)
 {
-    socklen_t size = clntaddr.size();
-    int res = ::accept(sockfd, clntaddr.generilize(), &size);
-    if (size != clntaddr.size())
+    socklen_t size = clntaddr->size();
+    int res = ::accept(sockfd, clntaddr->generilize(), &size);
+    if (size != clntaddr->size())
     {
         std::cout << "Failed to accept, address is cutdown" << std::endl;
         res = -1;
     }
     if (res != -1)
-        cout << "Client accepted in Fd: " << res << ", " << inet_ntoa(clntaddr.siaddr.sin_addr)
-             << ":" << ntohs(clntaddr.siaddr.sin_port) << endl;
+        cout << "Client accepted in Fd: " << res << ", " << inet_ntoa(clntaddr->siaddr.sin_addr)
+             << ":" << ntohs(clntaddr->siaddr.sin_port) << endl;
     return res;
 }
+
 int Socket::getFd()
 {
     return sockfd;
+}
+
+void Socket::setnonblocking()
+{
+    fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL, 0) | O_NONBLOCK);
 }

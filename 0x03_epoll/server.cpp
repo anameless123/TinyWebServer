@@ -6,7 +6,7 @@
 
 #include <cstring>
 #include <iostream>
-#include "../utils.hpp"
+#include "utils.hpp"
 
 using namespace std;
 

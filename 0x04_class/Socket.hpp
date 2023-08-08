@@ -1,7 +1,7 @@
 #pragma once
 #include <sys/socket.h>
 #include "InetAddress.hpp"
-#include "../utils.hpp"
+#include "utils.hpp"
 
 class Socket
 {
