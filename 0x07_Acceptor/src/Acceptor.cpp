@@ -1,11 +1,11 @@
 #include "Acceptor.h"
-#include "Socket.h"
-#include "InetAddress.hpp"
 #include "Channel.h"
+#include "InetAddress.hpp"
 #include "Server.h"
+#include "Socket.h"
 
-Acceptor::Acceptor(EventLoop *_loop) : loop(_loop)
-{
+Acceptor::Acceptor(EventLoop* _loop)
+    : loop(_loop) {
     sock = new Socket;
     addr = new InetAddress(AF_INET, "127.0.0.1", 8888);
     sock->bind(*addr);
@@ -17,18 +17,15 @@ Acceptor::Acceptor(EventLoop *_loop) : loop(_loop)
     acceptChannel->setCallback(cb);
     acceptChannel->enableReading();
 }
-Acceptor::~Acceptor()
-{
+Acceptor::~Acceptor() {
     delete sock;
     delete acceptChannel;
 }
 
-void Acceptor::acceptConnection()
-{
+void Acceptor::acceptConnection() {
     newConnectionCallback(sock);
 }
 
-void Acceptor::setNewConnectionCallback(std::function<void(Socket *)> _cb)
-{
+void Acceptor::setNewConnectionCallback(std::function<void(Socket*)> _cb) {
     newConnectionCallback = _cb;
 }

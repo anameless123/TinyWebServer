@@ -1,97 +1,72 @@
-#include "InetAddress.hpp"
 #include "Socket.h"
+#include "InetAddress.hpp"
 
-Socket::Socket()
-{
+Socket::Socket() {
     sockfd = ::socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1)
-    {
+    if (sockfd == -1) {
         perror("Failed to initialize socket!");
         exit(EXIT_FAILURE);
-    }
-    else
+    } else
         cout << "socket initialize succeed!" << endl;
 }
-Socket::Socket(int fd) : sockfd(fd)
-{
+Socket::Socket(int fd)
+    : sockfd(fd) {
     Utils::errif(fd == -1, "Failed to copy construct Socket by fd");
 }
 
-Socket::Socket(__socket_type tran, uint16_t inet)
-{
-    if (sockfd = ::socket(IP, tran, 0) == -1)
-    {
+Socket::Socket(__socket_type tran, uint16_t inet) {
+    if (sockfd = ::socket(IP, tran, 0) == -1) {
         perror("Failed to initialize socket!");
         exit(EXIT_FAILURE);
-    }
-    else
+    } else
         cout << "socket initialize succeed!" << endl;
 }
-Socket::~Socket()
-{
-    if (sockfd != -1)
-    {
+Socket::~Socket() {
+    if (sockfd != -1) {
         close(sockfd);
         sockfd = -1;
     }
 }
-void Socket::bind(InetAddress addr)
-{
-    if (addr.getv() == IP)
-    {
-        if (::bind(sockfd, addr.generilize(), addr.size()) == -1)
-        {
+void Socket::bind(InetAddress addr) {
+    if (addr.getv() == IP) {
+        if (::bind(sockfd, addr.generilize(), addr.size()) == -1) {
             perror("Failed to bind!");
             exit(EXIT_FAILURE);
-        }
-        else
+        } else
             cout << "Server bind at: " << inet_ntoa(addr.siaddr.sin_addr)
                  << ":" << ntohs(addr.siaddr.sin_port) << endl;
-    }
-    else
-    {
+    } else {
         std::cout << "address ipVersion != socket ipVersion" << std::endl;
         exit(1);
     }
 }
 
-void Socket::connect(InetAddress addr)
-{
-    if (addr.getv() == IP)
-    {
-        if (::connect(sockfd, addr.generilize(), addr.size()) == -1)
-        {
+void Socket::connect(InetAddress addr) {
+    if (addr.getv() == IP) {
+        if (::connect(sockfd, addr.generilize(), addr.size()) == -1) {
             perror("Failed to connect!");
             exit(EXIT_FAILURE);
-        }
-        else
+        } else
             cout << "Connect to: " << inet_ntoa(addr.siaddr.sin_addr)
                  << ":" << ntohs(addr.siaddr.sin_port) << endl;
-    }
-    else
-    {
+    } else {
         cout << "address ipVersion != socket ipVersion" << endl;
         exit(1);
     }
 }
 
-void Socket::listen()
-{
-    if (::listen(sockfd, MaxCon) == -1)
-    {
+void Socket::listen() {
+    if (::listen(sockfd, MaxCon) == -1) {
         perror("Failed to listen!");
         exit(EXIT_FAILURE);
-    }
-    else
+    } else
         cout << "listening..." << endl;
 }
 
-int Socket::accept(InetAddress *clntaddr)
-{
+int Socket::accept(InetAddress* clntaddr) {
     socklen_t size = clntaddr->size();
     int res = ::accept(sockfd, clntaddr->generilize(), &size);
-    if (size != clntaddr->size())
-    {
+    if (size != clntaddr->size()) {
         std::cout << "Failed to accept, address is cutdown" << std::endl;
         res = -1;
     }
@@ -101,12 +76,10 @@ int Socket::accept(InetAddress *clntaddr)
     return res;
 }
 
-int Socket::getFd()
-{
+int Socket::getFd() {
     return sockfd;
 }
 
-void Socket::setnonblocking()
-{
+void Socket::setnonblocking() {
     fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL, 0) | O_NONBLOCK);
 }

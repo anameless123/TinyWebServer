@@ -1,54 +1,43 @@
 #pragma once
 
-#include <iostream>
+#include <fcntl.h>
 #include <unistd.h>
 #include <cstring>
-#include <fcntl.h>
+#include <iostream>
 
 using std::cin;
 using std::cout;
 using std::endl;
 
-class Utils
-{
-public:
-    static void errif(bool condition, const char *errmsg)
-    {
-        if (condition)
-        {
+class Utils {
+   public:
+    static void errif(bool condition, const char* errmsg) {
+        if (condition) {
             perror(errmsg);
             exit(EXIT_FAILURE);
         }
     }
 
-    static void keepsend(int fd)
-    {
+    static void keepsend(int fd) {
         char buf[1024];
-        while (true)
-        {
+        while (true) {
             memset(buf, 0, sizeof(buf));
             cin >> buf;
             ssize_t wbytes = write(fd, buf, sizeof(buf));
             cout << wbytes << endl;
 
-            if (wbytes == -1)
-            {
+            if (wbytes == -1) {
                 errif(wbytes == -1, "Failed to write, socket already disconnected!");
                 break;
             }
             ssize_t read_bytes = read(fd, buf, sizeof(buf));
 
-            if (read_bytes > 0)
-            {
+            if (read_bytes > 0) {
                 cout << "message from server: " << buf << endl;
-            }
-            else if (read_bytes == 0)
-            {
+            } else if (read_bytes == 0) {
                 cout << "server socket disconnected" << endl;
                 break;
-            }
-            else if (read_bytes == -1)
-            {
+            } else if (read_bytes == -1) {
                 close(fd);
                 errif(true, "socket read error");
             }
