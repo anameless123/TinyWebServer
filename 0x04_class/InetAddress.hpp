@@ -26,8 +26,6 @@ public:
         else
         {
             siaddr.sin_family = type;
-
-            siaddr.sin_family = type;
             siaddr.sin_port = htons(port);
         }
     }

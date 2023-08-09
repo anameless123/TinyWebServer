@@ -4,40 +4,38 @@
 #include <cstring>
 #include <iostream>
 
-class InetAddress
-{
-public:
+class InetAddress {
+  private:
     sockaddr_in siaddr;
 
-    InetAddress()
-    {
+  public:
+    InetAddress() {
         std::memset(&siaddr, 0, sizeof(siaddr));
     }
-    InetAddress(int type, const char *IP, uint16_t port)
-    {
-        if (inet_pton(AF_INET, IP, &siaddr.sin_addr) <= 0)
-        {
+    InetAddress(int type, const char *IP, uint16_t port) {
+        if (inet_pton(AF_INET, IP, &siaddr.sin_addr) <= 0) {
             // IP地址不合法,抛出异常或返回错误
             std::cout << "IP not legal!" << std::endl;
             exit(1);
-        }
-        else
-        {
+        } else {
             siaddr.sin_family = type;
             siaddr.sin_port = htons(port);
         }
     }
-    sockaddr *generilize()
-    {
+    sockaddr *generilize() {
         return (sockaddr *)&siaddr;
     }
-    uint16_t getv()
-    {
+    uint16_t getv() {
         return siaddr.sin_family;
     }
-    uint32_t size()
-    {
+    uint32_t size() {
         return sizeof(siaddr);
+    }
+    char *getIP() {
+        return inet_ntoa(siaddr.sin_addr);
+    }
+    uint16_t getPort(){
+        return ntohs(siaddr.sin_port);
     }
     ~InetAddress() {}
 };

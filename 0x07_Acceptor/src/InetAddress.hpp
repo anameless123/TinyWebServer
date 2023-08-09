@@ -18,8 +18,6 @@ class InetAddress {
             exit(1);
         } else {
             siaddr.sin_family = type;
-
-            siaddr.sin_family = type;
             siaddr.sin_port = htons(port);
         }
     }
