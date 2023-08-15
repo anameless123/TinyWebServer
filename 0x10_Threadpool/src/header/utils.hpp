@@ -43,9 +43,13 @@ class Utils {
                 }
                 if (already_read >= sendBuffer->size()) {
                     cout << "message from server: " << readBuffer->c_str() << endl;
+                    break;
                 }
             }
+            readBuffer->clear();
         }
+        delete sendBuffer;
+        delete readBuffer;
         close(fd);
     }
 };

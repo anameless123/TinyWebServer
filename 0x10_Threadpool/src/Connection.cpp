@@ -36,13 +36,17 @@ void Connection::echo(int fd) {
             sock->printIP();
             cout << ":";
             sock->printPort();
-            cout << endl
+            cout << " =" << endl
                  << readBuffer->c_str() << endl;
             Utils::errif(write(fd, readBuffer->c_str(), readBuffer->size()) == -1, "socket write error");
             readBuffer->clear();
             break;
         } else if (rbytes == 0) { // EOF事件，一般表示客户端断开连接
-            cout << "Client fd:" << fd << " already disconnected !" << endl;
+            cout << "Client:";
+            sock->printIP();
+            cout << ":";
+            sock->printPort();
+            cout << " already disconnected !" << endl;
             deleteConnectionCallback(sock); // 关闭socket会自动将文件描述符从epoll树上移除
             break;
         } // 剩下的bytes_read == -1的情况表示其他错误，这里没有处理

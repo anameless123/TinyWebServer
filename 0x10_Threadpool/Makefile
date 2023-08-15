@@ -1,9 +1,9 @@
 server:
-	g++ server.cpp -lpthread src/Acceptor.cpp src/Buffer.cpp src/Channel.cpp \
+	g++ server.cpp -pthread src/Acceptor.cpp src/Buffer.cpp src/Channel.cpp \
 	src/Connection.cpp src/Epoll.cpp src/EventLoop.cpp src/Server.cpp src/Socket.cpp \
 	src/ThreadPool.cpp \
 	-o server &&\
-	g++ client.cpp src/Socket.cpp -o client
+	g++ client.cpp src/Buffer.cpp src/Socket.cpp -o client
 clean:
 	rm server && rm client
 

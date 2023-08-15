@@ -27,6 +27,7 @@ void Server::newConnection(Socket *clnt_sock) {
     Connection *conn = new Connection(loop, clnt_sock);
     std::function<void(Socket*)> cb = std::bind(&Server::deleteConnection, this, std::placeholders::_1);
     conn->setDeleteConnectionCallback(cb);
+
     connections[clnt_sock->getFd()] = conn;
 }
 
