@@ -23,7 +23,6 @@ class Utils {
         Buffer *sendBuffer = new Buffer();
         Buffer *readBuffer = new Buffer();
         while (true) {
-            cout << "input message: ";
             sendBuffer->getline();
             ssize_t wbytes = write(fd, sendBuffer->c_str(), sendBuffer->size());
             if (wbytes == -1) {
@@ -49,6 +48,8 @@ class Utils {
             }
             readBuffer->clear();
         }
+        delete sendBuffer;
+        delete readBuffer;
         close(fd);
     }
 };
