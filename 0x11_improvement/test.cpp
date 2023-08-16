@@ -56,22 +56,25 @@ int main(int argc, char *argv[]) {
     int msgs = 100;
     int wait = 0;
     int o;
-    const char *optstring = "t:m:w";
+    const char *optstring = "t:m:w:";
     while ((o = getopt(argc, argv, optstring)) != -1) {
         switch (o) {
         case 't':
             threads = stoi(optarg);
+            cout << "threads = " << threads << endl;
             break;
         case 'm':
             msgs = stoi(optarg);
+            cout << "msgs = " << msgs << endl;
             break;
         case 'w':
-            wait = stoi(optarg);
+            if (optarg) wait = stoi(optarg);
+            cout << "wait = " << wait << endl;
             break;
         case '?':
             cout << "error optopt: " << optopt << endl;
             cout << "error opterr: " << opterr << endl;
-            break;
+            exit(EXIT_FAILURE);
         }
     }
 
