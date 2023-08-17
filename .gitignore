@@ -30,7 +30,7 @@
 *.exe
 *.out
 *.app
-server*
-client*
-test
-.vscode/
+
+build/
+*__pycache__/
+.vscode/settings.json

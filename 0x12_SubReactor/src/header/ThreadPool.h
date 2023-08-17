@@ -21,7 +21,7 @@ class ThreadPool {
     template <class F, class... Args>
     auto add(F &&f, Args &&...args) -> std::future<typename std::result_of<F(Args...)>::type>;
 };
-
+// 添加一个函数到执行队列中，等待线程池进行执行
 template <typename F, typename... Args>
 auto ThreadPool::add(F &&f, Args &&...args) -> std::future<typename std::result_of<F(Args...)>::type> {
     using return_type = typename std::result_of<F(Args...)>::type;
